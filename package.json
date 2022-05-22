@@ -6,12 +6,13 @@
   "type": "module",
   "exports": "./dist/main.js",
   "scripts": {
-    "start": "node --es-module-specifier-resolution=node dist/main.js",
     "build": "tsc",
-    "dev": "nodemon --watch './**/*.ts' --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/main.ts",
-    "test": "test",
-    "prettier": "prettier --write \"./**/*.{ts,json}\"",
-    "lint": "eslint . --ext .ts"
+    "start:dev": "nodemon --watch './**/*.ts' --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/main.ts",
+    "start:prod": "node --es-module-specifier-resolution=node dist/main.js",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=src/services/tests",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=src/routes/tests",
+    "code:format": "prettier --write \"./**/*.{ts,json}\"",
+    "code:lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,11 @@
   },
   "homepage": "https://github.com/echang49/inventory-tracking#readme",
   "devDependencies": {
+    "@jest/globals": "^28.1.0",
     "@shopify/eslint-plugin": "^41.2.1",
     "@shopify/prettier-config": "^1.1.2",
     "@types/express": "^4.17.13",
+    "@types/jest": "^27.5.1",
     "@types/lowdb": "^1.0.11",
     "@types/node": "^17.0.35",
     "@types/uuid": "^8.3.4",
@@ -34,6 +37,7 @@
     "eslint": "^8.16.0",
     "nodemon": "^2.0.16",
     "prettier": "^2.6.2",
+    "ts-jest": "^28.0.2",
     "ts-node": "^10.8.0",
     "typescript": "^4.6.4"
   },
