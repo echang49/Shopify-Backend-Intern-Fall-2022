@@ -1,25 +1,22 @@
-import express, { Request, Response } from 'express';
-import ItemDTO from '../models/ItemDTO';
+import express, {Request, Response} from 'express';
+
 import ShipmentDTO from '../models/ShipmentDTO';
 import ShipmentService from '../services/ShipmentService';
 
+export const ShipmentRouter = express.Router();
 
-export module Shipment {
-    export const router = express.Router();
+const shipmentService: ShipmentService = new ShipmentService();
 
-    const shipmentService:ShipmentService = new ShipmentService();
-    
-    router.get('/', (req:Request, res:Response) => {
-        let { uuid } = req.query;
-        if(typeof uuid !== "string") throw new Error("Improper uuid.");
+ShipmentRouter.get('/', (req: Request, res: Response) => {
+  const {uuid} = req.query;
+  if (typeof uuid !== 'string') throw new Error('Improper uuid.');
 
-        let shipment:ShipmentDTO = shipmentService.getShipment(uuid);
-        res.send(shipment);
-    });
+  const shipment: ShipmentDTO = shipmentService.getShipment(uuid);
+  res.send(shipment);
+});
 
-    router.post('/', (req:Request, res:Response) => {
-        let { name, items } = req.body;
-        let shipment:ShipmentDTO = shipmentService.createShipment(name, items);
-        res.send(shipment);
-    });
-}
+ShipmentRouter.post('/', (req: Request, res: Response) => {
+  const {name, items} = req.body;
+  const shipment: ShipmentDTO = shipmentService.createShipment(name, items);
+  res.send(shipment);
+});

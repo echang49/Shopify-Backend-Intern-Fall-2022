@@ -1,65 +1,74 @@
-import config from "../config";
-import Database from "../databases/database";
-import IInventoryService from "../models/IInventoryService";
-import ItemDTO from "../models/ItemDTO";
-import { LowSync } from "lowdb";
-import { v4 as uuidv4 } from 'uuid';
+import {LowSync} from 'lowdb';
+import {v4 as uuidv4} from 'uuid';
 
-class InventoryService implements IInventoryService {
-    private items:LowSync<any>;
-    private deleted_items:LowSync<any>;
+import config from '../config';
+import Database from '../databases/database';
+import InventoryInterface from '../models/InventoryInterface';
+import ItemDTO from '../models/ItemDTO';
 
-    constructor() {
-        this.items = Database.getCollection(config.ITEM_DATABASE);
-        this.deleted_items = Database.getCollection(config.DELETED_ITEM_DATABASE);
+class InventoryService implements InventoryInterface {
+  private ITEMS: LowSync<any>;
+  private DELETED_ITEMS: LowSync<any>;
+
+  constructor() {
+    this.ITEMS = Database.getCollection(config.ITEM_DATABASE);
+    this.DELETED_ITEMS = Database.getCollection(config.DELETED_ITEM_DATABASE);
+  }
+
+  public getItem(uuid: string): ItemDTO {
+    const result: ItemDTO[] = this.ITEMS.data.filter(
+      (element: ItemDTO) => element.uuid === uuid,
+    );
+    return result[0];
+  }
+
+  public getItems(category?: string | undefined): ItemDTO[] {
+    const result: ItemDTO[] = this.ITEMS.data.filter(
+      (element: ItemDTO) => element.category === category,
+    );
+    return result;
+  }
+
+  public createItem(name: string, category: string, count: number): ItemDTO {
+    const item: ItemDTO = {uuid: uuidv4(), name, category, count};
+    if (isNaN(count)) item.count = 0;
+    this.ITEMS.data.push(item);
+    Database.write(this.ITEMS);
+    return item;
+  }
+
+  public editItem(item: ItemDTO): ItemDTO {
+    const index = this.ITEMS.data.findIndex(
+      (element: ItemDTO) => element.uuid === item.uuid,
+    );
+    if (index === -1) {
+      throw new Error('Improper item uuid');
     }
 
-    getItem(uuid: string): ItemDTO {
-        let result:ItemDTO[] = this.items.data.filter((element:ItemDTO) => element.uuid === uuid);
-        return result[0];
+    let key: keyof typeof item;
+    for (key in item) {
+      if (item[key] !== undefined) this.ITEMS.data[index][key] = item[key];
     }
 
-    getItems(category?: string | undefined): ItemDTO[] {
-        let result:ItemDTO[] = this.items.data.filter((element:ItemDTO) => element.category === category);
-        return result;
+    Database.write(this.ITEMS);
+
+    return this.ITEMS.data[index];
+  }
+
+  public deleteItem(uuid: string): void {
+    const index = this.ITEMS.data.findIndex(
+      (element: ItemDTO) => element.uuid === uuid,
+    );
+    if (index === -1) {
+      throw new Error('Improper item uuid');
     }
 
-    createItem(name: string, category: string, count: number): ItemDTO {
-        if(isNaN(count)) count = 0;
+    const item: ItemDTO[] = this.ITEMS.data.splice(index, 1);
+    Database.write(this.ITEMS);
 
-        let item:ItemDTO = { uuid: uuidv4(), name, category, count };
-        this.items.data.push(item);
-        Database.write(this.items);
-        return item;
-    }
-
-    editItem(item: ItemDTO): ItemDTO {
-        let index = this.items.data.findIndex((element:ItemDTO) => element.uuid === item.uuid);
-        if(index === -1) {
-            throw new Error("Improper item uuid");
-        }
-
-        if(item.name !== undefined) this.items.data[index].name = item.name;
-        if(item.category !== undefined) this.items.data[index].category = item.category;
-        if(item.count !== undefined && !isNaN(item.count)) this.items.data[index].count = item.count;
-
-        Database.write(this.items);
-
-        return this.items.data[index];
-    }
-
-    deleteItem(uuid: string): void {
-        let index = this.items.data.findIndex((element:ItemDTO) => element.uuid === uuid);
-        if(index === -1) {
-            throw new Error("Improper item uuid");
-        }
-
-        let item:ItemDTO[] = this.items.data.splice(index, 1);
-        Database.write(this.items);
-
-        this.deleted_items.data.push(item[0]);
-        Database.write(this.deleted_items);
-    }
+    this.DELETED_ITEMS.data.push(item[0]);
+    Database.write(this.DELETED_ITEMS);
+  }
 }
 
 export default InventoryService;

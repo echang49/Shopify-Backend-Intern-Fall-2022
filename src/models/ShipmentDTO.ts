@@ -1,9 +1,9 @@
-import ItemDTO from "./ItemDTO";
+import ItemDTO from './ItemDTO';
 
-type ShipmentDTO = {
-    uuid: string;
-    name: string;
-    items: ItemDTO[];
+interface ShipmentDTO {
+  uuid: string;
+  name: string;
+  items: ItemDTO[];
 }
 
 export default ShipmentDTO;
