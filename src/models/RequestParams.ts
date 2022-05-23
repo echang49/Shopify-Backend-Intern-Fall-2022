@@ -13,6 +13,10 @@ export interface InventoryEditParams {
   count?: number;
 }
 
+export interface InventoryDeleteParams {
+  uuid: string;
+}
+
 export interface ShipmentCreationParams {
   name: string;
   items: ItemDTO[];

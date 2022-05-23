@@ -1,12 +1,12 @@
 import ItemDTO from './ItemDTO';
-import {InventoryCreationParams, InventoryEditParams} from './RequestParams';
+import {InventoryCreationParams, InventoryEditParams, InventoryDeleteParams} from './RequestParams';
 
 interface InventoryInterface {
   getItem: (uuid: string) => ItemDTO;
   getItems: (category: string) => ItemDTO[];
   createItem: (params: InventoryCreationParams) => ItemDTO;
   editItem: (params: InventoryEditParams) => ItemDTO;
-  deleteItem: (uuid: string) => void;
+  deleteItem: (params: InventoryDeleteParams) => void;
 }
 
 export default InventoryInterface;

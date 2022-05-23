@@ -7,6 +7,7 @@ import InventoryService from '../InventoryService';
 import {
   InventoryCreationParams,
   InventoryEditParams,
+  InventoryDeleteParams,
 } from '../../models/RequestParams';
 import ItemDTO from '../../models/ItemDTO';
 import {
@@ -199,9 +200,10 @@ test('givenProperUUID_whenDeleteItem_ensureDeleted', () => {
   );
 
   const inventoryService: InventoryService = new InventoryService();
+  const params: InventoryDeleteParams = { uuid: itemOne.uuid };
 
   // when
-  inventoryService.deleteItem(itemOne.uuid);
+  inventoryService.deleteItem(params);
 
   // ensure
   const savedItem: ItemDTO = inventoryService.getItem(itemOne.uuid);
@@ -217,10 +219,11 @@ test('givenImproperUUID_whenDeleteItem_ensureErrorThrown', () => {
   itemsCollection.data.push(itemOne, itemTwo, itemThree);
 
   const inventoryService: InventoryService = new InventoryService();
+  const params: InventoryDeleteParams = { uuid: 'test_uuid' };
 
   // ensure
   expect(() => {
     // when
-    inventoryService.deleteItem('test_uuid');
+    inventoryService.deleteItem(params);
   }).toThrow('Improper item uuid');
 });

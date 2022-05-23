@@ -7,6 +7,7 @@ import Database from '../databases/database';
 import {
   InventoryCreationParams,
   InventoryEditParams,
+  InventoryDeleteParams,
 } from '../models/RequestParams';
 import InventoryInterface from '../models/InventoryInterface';
 import ItemDTO from '../models/ItemDTO';
@@ -71,9 +72,9 @@ class InventoryService implements InventoryInterface {
   }
 
   @Delete('/')
-  public deleteItem(@Body() uuid: string): void {
+  public deleteItem(@Body() params: InventoryDeleteParams): void {
     const index = this.ITEMS.data.findIndex(
-      (element: ItemDTO) => element.uuid === uuid,
+      (element: ItemDTO) => element.uuid === params.uuid,
     );
     if (index === -1) {
       throw new Error('Improper item uuid');

@@ -74,6 +74,18 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"InventoryDeleteParams": {
+				"properties": {
+					"uuid": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"uuid"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ShipmentDTO": {
 				"properties": {
 					"uuid": {
@@ -227,7 +239,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"type": "string"
+								"$ref": "#/components/schemas/InventoryDeleteParams"
 							}
 						}
 					}

@@ -52,6 +52,6 @@ InventoryRouter.put('/', (req: Request, res: Response) => {
 
 InventoryRouter.delete('/', (req: Request, res: Response) => {
   const {uuid} = req.body;
-  inventoryService.deleteItem(uuid);
+  inventoryService.deleteItem(req.body);
   return res.send();
 });
