@@ -12,7 +12,8 @@
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=src/services/tests",
     "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=src/routes/tests",
     "code:format": "prettier --write \"./**/*.{ts,json}\"",
-    "code:lint": "eslint . --ext .ts"
+    "code:lint": "eslint . --ext .ts",
+    "swagger": "tsoa spec"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "@types/jest": "^27.5.1",
     "@types/lowdb": "^1.0.11",
     "@types/node": "^17.0.35",
+    "@types/swagger-ui-express": "^4.1.3",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/parser": "^5.25.0",
     "eslint": "^8.16.0",
@@ -44,6 +46,8 @@
   "dependencies": {
     "express": "^4.18.1",
     "lowdb": "^3.0.0",
+    "swagger-ui-express": "^4.4.0",
+    "tsoa": "^4.1.0",
     "uuid": "^8.3.2"
   },
   "prettier": "@shopify/prettier-config"
