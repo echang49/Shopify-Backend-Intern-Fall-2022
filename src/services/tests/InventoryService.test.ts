@@ -4,6 +4,10 @@ import {LowSync} from 'lowdb';
 import config from '../../config';
 import Database from '../../databases/database';
 import InventoryService from '../InventoryService';
+import {
+  InventoryCreationParams,
+  InventoryEditParams,
+} from '../../models/RequestParams';
 import ItemDTO from '../../models/ItemDTO';
 import {
   clearTestDatabases,
@@ -109,34 +113,38 @@ test('givenImproperCategory_whenGetCategory_ensureReturnBlank', () => {
 test('givenProperFields_whenCreateItem_ensureReturnNewItem', () => {
   // given
   const inventoryService: InventoryService = new InventoryService();
-  const name = 'Alfredo';
-  const category = 'Pastas';
-  const count = 20;
+  const params: InventoryCreationParams = {
+    name: 'Alfredo',
+    category: 'Pastas',
+    count: 20,
+  };
 
   // when
-  const item: ItemDTO = inventoryService.createItem(name, category, count);
+  const item: ItemDTO = inventoryService.createItem(params);
 
   // ensure
   expect(item.uuid).toBeDefined();
-  expect(item.name).toEqual(name);
-  expect(item.category).toEqual(category);
-  expect(item.count).toEqual(count);
+  expect(item.name).toEqual(params.name);
+  expect(item.category).toEqual(params.category);
+  expect(item.count).toEqual(params.count);
 });
 
 test('givenImproperCount_whenCreateItem_ensureReturnNewItemWithZeroCount', () => {
   // given
   const inventoryService: InventoryService = new InventoryService();
-  const name = 'Alfredo';
-  const category = 'Pastas';
-  const count = Number('Amazing Pastas');
+  const params: InventoryCreationParams = {
+    name: 'Alfredo',
+    category: 'Pastas',
+    count: Number('Amazing Pastas'),
+  };
 
   // when
-  const item: ItemDTO = inventoryService.createItem(name, category, count);
+  const item: ItemDTO = inventoryService.createItem(params);
 
   // ensure
   expect(item.uuid).toBeDefined();
-  expect(item.name).toEqual(name);
-  expect(item.category).toEqual(category);
+  expect(item.name).toEqual(params.name);
+  expect(item.category).toEqual(params.category);
   expect(item.count).toEqual(0);
 });
 
@@ -149,16 +157,16 @@ test('givenProperFields_whenEditItem_ensureReturnEditedItem', () => {
 
   const inventoryService: InventoryService = new InventoryService();
 
-  const comparedItem: ItemDTO = {...itemOne};
-  comparedItem.name = 'grapes';
-  comparedItem.count = 30;
+  const params: InventoryEditParams = {...itemOne};
+  params.name = 'grapes';
+  params.count = 30;
 
   // when
-  const item: ItemDTO = inventoryService.editItem(comparedItem);
+  const item: ItemDTO = inventoryService.editItem(params);
 
   // ensure
-  const savedItem: ItemDTO = inventoryService.getItem(comparedItem.uuid);
-  expect(item).toEqual(comparedItem);
+  const savedItem: ItemDTO = inventoryService.getItem(params.uuid);
+  expect(item).toEqual(params);
   expect(item).toEqual(savedItem);
 });
 
@@ -170,14 +178,13 @@ test('givenImproperUUID_whenEditItem_ensureErrorThrown', () => {
   itemsCollection.data.push(itemOne, itemTwo, itemThree);
 
   const inventoryService: InventoryService = new InventoryService();
-
-  const comparedItem: ItemDTO = {...itemOne};
-  comparedItem.uuid = 'test_uuid';
+  const params: InventoryEditParams = {...itemOne};
+  params.uuid = 'test_uuid';
 
   // ensure
   expect(() => {
     // when
-    inventoryService.editItem(comparedItem);
+    inventoryService.editItem(params);
   }).toThrow('Improper item uuid');
 });
 

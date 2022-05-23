@@ -1,14 +1,17 @@
+import {Get, Post, Route, Query, Body} from 'tsoa';
 import {LowSync} from 'lowdb';
 import {v4 as uuidv4} from 'uuid';
 
 import config from '../config';
 import Database from '../databases/database';
 import ItemDTO from '../models/ItemDTO';
+import {ShipmentCreationParams} from '../models/RequestParams';
 import ShipmentDTO from '../models/ShipmentDTO';
 import ShipmentInterface from '../models/ShipmentInterface';
 
 import InventoryService from './InventoryService';
 
+@Route('/api/shipment')
 class ShipmentService implements ShipmentInterface {
   private ITEMS: LowSync<any>;
   private SHIPMENTS: LowSync<any>;
@@ -20,11 +23,16 @@ class ShipmentService implements ShipmentInterface {
     this.inventoryService = new InventoryService();
   }
 
-  public createShipment(name: string, items: ItemDTO[]): ShipmentDTO {
-    const shipment: ShipmentDTO = {uuid: uuidv4(), name, items: []};
-    this.validateItems(items);
+  @Post('/')
+  public createShipment(@Body() params: ShipmentCreationParams): ShipmentDTO {
+    const shipment: ShipmentDTO = {
+      uuid: uuidv4(),
+      name: params.name,
+      items: [],
+    };
+    this.validateItems(params.items);
 
-    for (const item of items) {
+    for (const item of params.items) {
       const index = this.ITEMS.data.findIndex(
         (element: ItemDTO) => element.uuid === item.uuid,
       );
@@ -42,7 +50,8 @@ class ShipmentService implements ShipmentInterface {
     return shipment;
   }
 
-  public getShipment(uuid: string): ShipmentDTO {
+  @Get('/')
+  public getShipment(@Query() uuid: string): ShipmentDTO {
     const result: ShipmentDTO[] = this.SHIPMENTS.data.filter(
       (element: ShipmentDTO) => element.uuid === uuid,
     );

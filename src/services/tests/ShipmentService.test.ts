@@ -4,6 +4,7 @@ import {LowSync} from 'lowdb';
 import config from '../../config';
 import Database from '../../databases/database';
 import ItemDTO from '../../models/ItemDTO';
+import {ShipmentCreationParams} from '../../models/RequestParams';
 import ShipmentDTO from '../../models/ShipmentDTO';
 import ShipmentService from '../ShipmentService';
 import {
@@ -92,28 +93,30 @@ test('givenProperFields_whenCreateShipment_ensureReturnNewShipment', () => {
   );
   shipmentsCollection.data.push(shipmentOne);
 
-  const name = 'Test Shipment #4';
   const startVersion: ItemDTO[] = [{...itemOne}, {...itemTwo}];
-  const orders: ItemDTO[] = [{...itemOne}, {...itemTwo}];
-  orders[0].count = 5;
-  orders[1].count = 2;
+  const params: ShipmentCreationParams = {
+    name: 'Test Shipment #4',
+    items: [{...itemOne}, {...itemTwo}],
+  };
+  params.items[0].count = 5;
+  params.items[1].count = 2;
 
   const shipmentService: ShipmentService = new ShipmentService();
 
   // when
-  const shipment: ShipmentDTO = shipmentService.createShipment(name, orders);
+  const shipment: ShipmentDTO = shipmentService.createShipment(params);
 
   // ensure
-  expect(shipment.name).toBe(name);
-  expect(shipment.items).toEqual(orders);
+  expect(shipment.name).toBe(params.name);
+  expect(shipment.items).toEqual(params.items);
 
   if (startVersion[0].count !== undefined)
     expect(itemsCollection.data[0].count).toBe(
-      startVersion[0].count - orders[0].count,
+      startVersion[0].count - params.items[0].count,
     );
   if (startVersion[1].count !== undefined)
     expect(itemsCollection.data[1].count).toBe(
-      startVersion[1].count - orders[1].count,
+      startVersion[1].count - params.items[1].count,
     );
 });
 
@@ -128,16 +131,18 @@ test('givenImproperItemUUID_whenCreateShipment_ensureErrorThrownFromValidation',
   );
   shipmentsCollection.data.push(shipmentOne);
 
-  const name = 'Test Shipment #4';
-  const orders: ItemDTO[] = [{...itemOne}];
-  orders[0].uuid = 'test_uuid';
+  const params: ShipmentCreationParams = {
+    name: 'Test Shipment #4',
+    items: [{...itemOne}],
+  };
+  params.items[0].uuid = 'test_uuid';
 
   const shipmentService: ShipmentService = new ShipmentService();
 
   // ensure
   expect(() => {
     // when
-    shipmentService.createShipment(name, orders);
+    shipmentService.createShipment(params);
   }).toThrow('Invalid item to add onto shipment');
 });
 
@@ -152,15 +157,17 @@ test('givenImproperItemCount_whenCreateShipment_ensureErrorThrownFromValidation'
   );
   shipmentsCollection.data.push(shipmentOne);
 
-  const name = 'Test Shipment #4';
-  const orders: ItemDTO[] = [{...itemOne}];
-  orders[0].count = 100;
+  const params: ShipmentCreationParams = {
+    name: 'Test Shipment #4',
+    items: [{...itemOne}],
+  };
+  params.items[0].count = 100;
 
   const shipmentService: ShipmentService = new ShipmentService();
 
   // ensure
   expect(() => {
     // when
-    shipmentService.createShipment(name, orders);
+    shipmentService.createShipment(params);
   }).toThrow('Invalid count of item to add onto shipment');
 });

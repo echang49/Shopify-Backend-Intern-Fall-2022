@@ -16,7 +16,6 @@ ShipmentRouter.get('/', (req: Request, res: Response) => {
 });
 
 ShipmentRouter.post('/', (req: Request, res: Response) => {
-  const {name, items} = req.body;
-  const shipment: ShipmentDTO = shipmentService.createShipment(name, items);
+  const shipment: ShipmentDTO = shipmentService.createShipment(req.body);
   res.send(shipment);
 });

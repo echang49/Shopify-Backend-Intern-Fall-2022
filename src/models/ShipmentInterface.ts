@@ -1,8 +1,8 @@
-import ItemDTO from './ItemDTO';
+import {ShipmentCreationParams} from './RequestParams';
 import ShipmentDTO from './ShipmentDTO';
 
 interface ShipmentInterface {
-  createShipment: (name: string, items: ItemDTO[]) => ShipmentDTO;
+  createShipment: (params: ShipmentCreationParams) => ShipmentDTO;
   getShipment: (uuid: string) => ShipmentDTO;
 }
 

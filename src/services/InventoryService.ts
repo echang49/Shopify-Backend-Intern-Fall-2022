@@ -1,11 +1,17 @@
 import {LowSync} from 'lowdb';
 import {v4 as uuidv4} from 'uuid';
+import {Get, Post, Put, Delete, Route, Query, Body} from 'tsoa';
 
 import config from '../config';
 import Database from '../databases/database';
+import {
+  InventoryCreationParams,
+  InventoryEditParams,
+} from '../models/RequestParams';
 import InventoryInterface from '../models/InventoryInterface';
 import ItemDTO from '../models/ItemDTO';
 
+@Route('/api/inventory')
 class InventoryService implements InventoryInterface {
   private ITEMS: LowSync<any>;
   private DELETED_ITEMS: LowSync<any>;
@@ -15,39 +21,48 @@ class InventoryService implements InventoryInterface {
     this.DELETED_ITEMS = Database.getCollection(config.DELETED_ITEM_DATABASE);
   }
 
-  public getItem(uuid: string): ItemDTO {
+  @Get('/')
+  public getItem(@Query() uuid: string): ItemDTO {
     const result: ItemDTO[] = this.ITEMS.data.filter(
       (element: ItemDTO) => element.uuid === uuid,
     );
     return result[0];
   }
 
-  public getItems(category?: string | undefined): ItemDTO[] {
+  @Get('/items')
+  public getItems(@Query() category: string): ItemDTO[] {
     const result: ItemDTO[] = this.ITEMS.data.filter(
       (element: ItemDTO) => element.category === category,
     );
     return result;
   }
 
-  public createItem(name: string, category: string, count: number): ItemDTO {
-    const item: ItemDTO = {uuid: uuidv4(), name, category, count};
-    if (isNaN(count)) item.count = 0;
+  @Post('/')
+  public createItem(@Body() params: InventoryCreationParams): ItemDTO {
+    const item: ItemDTO = {
+      uuid: uuidv4(),
+      name: params.name,
+      category: params.category,
+      count: params.count,
+    };
+    if (isNaN(params.count)) item.count = 0;
     this.ITEMS.data.push(item);
     Database.write(this.ITEMS);
     return item;
   }
 
-  public editItem(item: ItemDTO): ItemDTO {
+  @Put('/')
+  public editItem(@Body() params: InventoryEditParams): ItemDTO {
     const index = this.ITEMS.data.findIndex(
-      (element: ItemDTO) => element.uuid === item.uuid,
+      (element: ItemDTO) => element.uuid === params.uuid,
     );
     if (index === -1) {
       throw new Error('Improper item uuid');
     }
 
-    let key: keyof typeof item;
-    for (key in item) {
-      if (item[key] !== undefined) this.ITEMS.data[index][key] = item[key];
+    let key: keyof typeof params;
+    for (key in params) {
+      if (params[key] !== undefined) this.ITEMS.data[index][key] = params[key];
     }
 
     Database.write(this.ITEMS);
@@ -55,7 +70,8 @@ class InventoryService implements InventoryInterface {
     return this.ITEMS.data[index];
   }
 
-  public deleteItem(uuid: string): void {
+  @Delete('/')
+  public deleteItem(@Body() uuid: string): void {
     const index = this.ITEMS.data.findIndex(
       (element: ItemDTO) => element.uuid === uuid,
     );
