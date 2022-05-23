@@ -1,5 +1,14 @@
 # Inventory Tracking
- 
+
+#### Screenshots: Imgur link coming soon
+#### Replit Link: https://inventory-tracking.echang49.repl.co/docs/#/
+
+## Usage Locally
+1. Download the codebase onto a local environment
+2. Download the dependencies with `npm install`. If running in a production environment, run `npm build` next.
+3. Run either `npm run start:dev` or `npm run start:prod`.
+4. Go to http://localhost:5000/docs/#/ (CURL and Postman works too)
+
 ## Tech Stack
 - **Runtime**: Node.js
 - **Language**: TypeScript (with ESM)
@@ -28,11 +37,3 @@
 - Delete inventory items
 - Ability to create “shipments”, assign inventory to the shipment, and adjust inventory appropriately
 - View single shipments
-
-## Usage
-1. Download the codebase onto a local environment
-2. Download the dependencies with `npm install`. If running in a production environment, run `npm build` next.
-3. Run either `npm run start:dev` or `npm run start:prod`.
-4. Go to http://localhost:5000/docs/ (CURL and Postman works too)
-
-Images coming soon.
