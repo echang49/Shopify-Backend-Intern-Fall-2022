@@ -6,3 +6,8 @@ interface ItemDTO {
 }
 
 export default ItemDTO;
+
+export interface PartialItemDTO {
+  uuid: string;
+  count: number;
+}

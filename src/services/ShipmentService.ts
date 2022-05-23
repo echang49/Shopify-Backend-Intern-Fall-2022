@@ -4,7 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 
 import config from '../config';
 import Database from '../databases/database';
-import ItemDTO from '../models/ItemDTO';
+import ItemDTO, {PartialItemDTO} from '../models/ItemDTO';
 import {ShipmentCreationParams} from '../models/RequestParams';
 import ShipmentDTO from '../models/ShipmentDTO';
 import ShipmentInterface from '../models/ShipmentInterface';
@@ -23,6 +23,10 @@ class ShipmentService implements ShipmentInterface {
     this.inventoryService = new InventoryService();
   }
 
+  /**
+   * Creates a new shipment based on the name and item details then returns the corresponding shipment details.
+   * Item id's must be valid and have valid counts (not more than in the system).
+   */
   @Post('/')
   public createShipment(@Body() params: ShipmentCreationParams): ShipmentDTO {
     const shipment: ShipmentDTO = {
@@ -50,6 +54,10 @@ class ShipmentService implements ShipmentInterface {
     return shipment;
   }
 
+  /**
+   * Retrieves the details of an existing shipment.
+   * Supply the unique shipment ID and receive corresponding shipment details.
+   */
   @Get('/')
   public getShipment(@Query() uuid: string): ShipmentDTO {
     const result: ShipmentDTO[] = this.SHIPMENTS.data.filter(
@@ -58,7 +66,7 @@ class ShipmentService implements ShipmentInterface {
     return result[0];
   }
 
-  private validateItems(items: ItemDTO[]): void {
+  private validateItems(items: PartialItemDTO[]): void {
     for (const item of items) {
       const itemToValidate = this.inventoryService.getItem(item.uuid);
       if (itemToValidate === undefined)

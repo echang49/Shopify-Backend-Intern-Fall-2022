@@ -116,7 +116,20 @@
 					},
 					"items": {
 						"items": {
-							"$ref": "#/components/schemas/ItemDTO"
+							"properties": {
+								"count": {
+									"type": "number",
+									"format": "double"
+								},
+								"uuid": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"count",
+								"uuid"
+							],
+							"type": "object"
 						},
 						"type": "array"
 					}
@@ -159,6 +172,7 @@
 						}
 					}
 				},
+				"description": "Retrieves the details of an existing item.\nSupply the unique item ID and receive corresponding item details.",
 				"security": [],
 				"parameters": [
 					{
@@ -185,6 +199,7 @@
 						}
 					}
 				},
+				"description": "Creates a new item based on the name, category, and count.\nReturns the new corresponding item details.",
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -212,6 +227,7 @@
 						}
 					}
 				},
+				"description": "Edits an existing item based on the unique item ID.\nReturns the new corresponding item details.\n\"uuid\" is required but \"name\", \"category\", and \"count\" are optional.",
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -232,6 +248,7 @@
 						"description": "No content"
 					}
 				},
+				"description": "Deletes an existing item based on the unique item ID.\nDeleted items are stored in a seperate database collection for deleted items.",
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -264,6 +281,7 @@
 						}
 					}
 				},
+				"description": "Retrieves the details of a list of existing items.\nSupply the category and receive a corresponding list of item details.",
 				"security": [],
 				"parameters": [
 					{
@@ -292,6 +310,7 @@
 						}
 					}
 				},
+				"description": "Creates a new shipment based on the name and item details then returns the corresponding shipment details.\nItem id's must be valid and have valid counts (not more than in the system).",
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -319,6 +338,7 @@
 						}
 					}
 				},
+				"description": "Retrieves the details of an existing shipment.\nSupply the unique shipment ID and receive corresponding shipment details.",
 				"security": [],
 				"parameters": [
 					{

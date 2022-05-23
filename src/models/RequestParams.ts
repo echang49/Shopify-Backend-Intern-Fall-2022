@@ -19,5 +19,8 @@ export interface InventoryDeleteParams {
 
 export interface ShipmentCreationParams {
   name: string;
-  items: ItemDTO[];
+  items: {
+    uuid: string;
+    count: number;
+  }[];
 }

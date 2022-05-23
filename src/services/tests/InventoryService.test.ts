@@ -200,7 +200,7 @@ test('givenProperUUID_whenDeleteItem_ensureDeleted', () => {
   );
 
   const inventoryService: InventoryService = new InventoryService();
-  const params: InventoryDeleteParams = { uuid: itemOne.uuid };
+  const params: InventoryDeleteParams = {uuid: itemOne.uuid};
 
   // when
   inventoryService.deleteItem(params);
@@ -219,7 +219,7 @@ test('givenImproperUUID_whenDeleteItem_ensureErrorThrown', () => {
   itemsCollection.data.push(itemOne, itemTwo, itemThree);
 
   const inventoryService: InventoryService = new InventoryService();
-  const params: InventoryDeleteParams = { uuid: 'test_uuid' };
+  const params: InventoryDeleteParams = {uuid: 'test_uuid'};
 
   // ensure
   expect(() => {

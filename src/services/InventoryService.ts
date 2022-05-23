@@ -22,6 +22,10 @@ class InventoryService implements InventoryInterface {
     this.DELETED_ITEMS = Database.getCollection(config.DELETED_ITEM_DATABASE);
   }
 
+  /**
+   * Retrieves the details of an existing item.
+   * Supply the unique item ID and receive corresponding item details.
+   */
   @Get('/')
   public getItem(@Query() uuid: string): ItemDTO {
     const result: ItemDTO[] = this.ITEMS.data.filter(
@@ -30,6 +34,10 @@ class InventoryService implements InventoryInterface {
     return result[0];
   }
 
+  /**
+   * Retrieves the details of a list of existing items.
+   * Supply the category and receive a corresponding list of item details.
+   */
   @Get('/items')
   public getItems(@Query() category: string): ItemDTO[] {
     const result: ItemDTO[] = this.ITEMS.data.filter(
@@ -38,6 +46,10 @@ class InventoryService implements InventoryInterface {
     return result;
   }
 
+  /**
+   * Creates a new item based on the name, category, and count.
+   * Returns the new corresponding item details.
+   */
   @Post('/')
   public createItem(@Body() params: InventoryCreationParams): ItemDTO {
     const item: ItemDTO = {
@@ -52,6 +64,11 @@ class InventoryService implements InventoryInterface {
     return item;
   }
 
+  /**
+   * Edits an existing item based on the unique item ID.
+   * Returns the new corresponding item details.
+   * "uuid" is required but "name", "category", and "count" are optional.
+   */
   @Put('/')
   public editItem(@Body() params: InventoryEditParams): ItemDTO {
     const index = this.ITEMS.data.findIndex(
@@ -71,6 +88,10 @@ class InventoryService implements InventoryInterface {
     return this.ITEMS.data[index];
   }
 
+  /**
+   * Deletes an existing item based on the unique item ID.
+   * Deleted items are stored in a seperate database collection for deleted items.
+   */
   @Delete('/')
   public deleteItem(@Body() params: InventoryDeleteParams): void {
     const index = this.ITEMS.data.findIndex(
