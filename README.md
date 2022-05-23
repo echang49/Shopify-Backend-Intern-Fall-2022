@@ -1,6 +1,6 @@
 # Inventory Tracking
 
-#### Screenshots: Imgur link coming soon
+#### Screenshots: https://imgur.com/a/KJM3h7q
 #### Replit Link: https://inventory-tracking.echang49.repl.co/docs/#/
 
 ## Usage Locally
@@ -8,6 +8,7 @@
 2. Download the dependencies with `npm install`. If running in a production environment, run `npm build` next.
 3. Run either `npm run start:dev` or `npm run start:prod`.
 4. Go to http://localhost:5000/docs/#/ (CURL and Postman works too)
+    - If using Swagger, click the endpoint, `try it out`, enter in the information, and then `execute`.
 
 ## Tech Stack
 - **Runtime**: Node.js
